@@ -44,16 +44,5 @@ We report:
 - Confusion matrix
 - Confidence calibration histogram (probability of the true class for correct vs incorrect predictions)
 
-LLM USAGE: 20 prompts x 2.32 g of CO2 = 46.4 g CO2
-
-- How to process images with Pytorch
-- How can i iterate through folders and images to extract label information using split()?
-- What are some libraries i may need to perform this preprocessing 
-- These are the layers Pytorch states to use with image classification, how could i expand it to make it more robust/ collect more features?
-- How can i export the model weights, and training history for later use?
-- How can i move my model on to a cloud gpu? 
-- How can i plot the confusion matrix as a figure?
-- How can i plot my probabilities to show confidence? Initally was returning confidewnce as string and not array. 
-- How can i calulcate the mean and std of my training set for normalizaiton? 
 
 	
