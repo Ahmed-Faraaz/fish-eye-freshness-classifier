@@ -1,48 +1,118 @@
-This notebook trains a CNN to classify fish eye images into three freshness classes using the FFE Fish Eye dataset. 
+# Data
 
-DATASET
-This model makes use of the FFE Fish Eye dataset which is publicly available for download via: https://data.mendeley.com/datasets/xzyx7pbr3w/1
-Direct download link: https://prod-dcd-datasets-cache-zipfiles.s3.eu-west-1.amazonaws.com/xzyx7pbr3w-1.zip 
+This folder contains dataset metadata, CSV label files, train/validation/test splits, and sample data references for the Fish Eye Freshness Classifier project.
 
-ENVIRONMENT
-- Python 3.11.9
-- PyTorch, Torchvision, scikit-learn, matplotlib, pandas, numpy
+The full image dataset is not included in this repository. The dataset should be downloaded separately and organized locally before running training or evaluation.
 
+---
 
-TL;DR RESULTS (current):
-- Test Accuracy: 67.4%
-- Majority Baseline: 40.2% (always predict "Highly Fresh")
-- Per-class (Test):
-  - Highly Fresh — Recall: 88.3%, Precision: 63.8%, F1: 0.74
-  - Fresh — Recall: 52.6%, Precision: 67.5%, F1: 0.59
-  - Not Fresh — Recall: 52.6%, Precision: 76.3%, F1: 0.62
+## Dataset Overview
 
-PROJECT STRUCTURE AND EXECUTION
+This project uses the Freshness of Fish Eyes (FFE) dataset.
 
-Project/
-	-> /FishFreshness_training_Performance.ipynb
-	-> /artifacts
-		-> /best_model_state_dict.pt
-		-> /training_history.csv
-	-> /data
-		-> /mendely
-			-> Chanos Chanos - Fresh
-			-> Chanos Chanos - Highly Fresh
-			-> ...
-	-> /images
-		-> Plots.png
+The dataset contains fish eye images labelled into three freshness categories:
 
-To run ensure the jupyter notbook is on the same level as the data folder and artifacts folder. Open notebook and select run all. 
-The notebook is pre-run. For evaluation on trained model run the cells under section "EVALUATION USING TRAINED MODEL"
+| Class | Storage Days |
+|---|---:|
+| Highly Fresh | Days 1–2 |
+| Fresh | Days 3–4 |
+| Not Fresh | Days 5–6 |
 
-WARNING: If the "run all" button is selected model training will be reperformed. 
+The full dataset contains 4,392 images across eight fish species.
 
-EVALUATION
-We report:
-- Overall accuracy
-- Per-class precision/recall/F1
-- Confusion matrix
-- Confidence calibration histogram (probability of the true class for correct vs incorrect predictions)
+---
 
+## Expected Folder Structure
 
-	
+The project expects images to be organized by class folder.
+
+Example:
+
+```text
+data/
+└── raw/
+    ├── Highly Fresh/
+    ├── Fresh/
+    └── Not Fresh/
+```
+
+Depending on the script version, the root folder may also be referred to as:
+
+```text
+data/kaggle/
+```
+
+Make sure the path used in the scripts matches the location of your local dataset.
+
+---
+
+## CSV Files
+
+The following CSV files may be included for reproducibility:
+
+| File | Description |
+|---|---|
+| `train_split.csv` | Training set image paths and labels |
+| `val_split.csv` | Validation set image paths and labels |
+| `test_split.csv` | Test set image paths and labels |
+| `test_predictions.csv` | Predictions from the custom CNN model |
+| `resnet_test_predictions.csv` | Predictions from the ResNet18 model |
+| `training_history.csv` | Training metrics for the custom CNN |
+| `training_history_resnet.csv` | Training metrics for the ResNet18 model |
+
+These files are useful for reproducing reported results and visualizations without rerunning all experiments.
+
+---
+
+## Label Encoding
+
+The final project uses three freshness classes:
+
+| Class | Label |
+|---|---:|
+| Highly Fresh | 0 |
+| Fresh | 1 |
+| Not Fresh | 2 |
+
+Check that label generation scripts match this encoding before training.
+
+---
+
+## Creating Labels and Splits
+
+Generate labels:
+
+```bash
+python scripts/make_labels.py
+```
+
+Generate train/validation/test splits:
+
+```bash
+python scripts/split_data.py
+```
+
+Check that the generated CSV files point to valid local image paths.
+
+---
+
+## Important Notes
+
+Large raw image datasets should not be committed to GitHub.
+
+Recommended `.gitignore` entries:
+
+```text
+data/raw/
+data/kaggle/
+*.pyc
+__pycache__/
+```
+
+Keep small CSV files and metadata if they help reproduce the project results.
+
+---
+
+## Dataset Limitation
+
+The “Fresh” class is visually transitional between “Highly Fresh” and “Not Fresh,” making it the most difficult class to classify. This class overlap was reflected in the final confusion matrix and remains a major area for future improvement.
